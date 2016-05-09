@@ -1,0 +1,399 @@
+//Matthew Seymour, matthew dot seymour at gmail.com
+"use strict";
+
+Array.prototype.foreach = function (loopFunction) {
+	for(var i = 0; i < this.length; i++) 
+		loopFunction(this[i]);
+}
+
+Number.prototype.squared = function () {
+	return this * this;
+}
+/////////////
+// Globals //
+/////////////
+var WIDTH = 870;
+var HEIGHT = 540;
+var SCALE = 43;
+var SWAP_ROW = 8;
+var SWAP_COL = -4;
+var OFFSET_X = 1.3;
+var OFFSET_Y = 1.3;
+var BOARD_SIZE = 13;
+
+var BACK_BUTTON_X = (BOARD_SIZE + 3);
+var BACK_BUTTON_Y = (2);
+var PLAYER_ENUM = {BLACK: 1, WHITE: 2};
+var ALPHABET = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+var ALPHA_LOOKUP = [];
+for(var i = 0; i < ALPHABET.length; i++)
+	ALPHA_LOOKUP[ALPHABET[i]] = i;
+
+
+function makeColorString(red, green, blue) {
+	return "rgb(" + red.toString() + "," + green.toString() + "," + blue.toString() + ")";
+}
+
+function makeColorStringAlpha(red, green, blue, alpha) {
+	return "rgba(" + red.toString() + "," + green.toString() + "," + blue.toString() + "," + alpha.toString() + ")";
+}
+
+function getMousePosition(e, canvas) {
+	var x;
+    var y;
+    if (e.pageX || e.pageY) {
+      x = e.pageX;
+      y = e.pageY;
+    }
+    else {
+      x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+      y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+    }
+
+	x -= canvas.offsetLeft;
+	y -= canvas.offsetTop;
+	return {x: x, y:y};
+}
+
+function getX(row, col) { return col + row / 2;}
+function getY(row, col) { return row * .866;}
+
+function refreshView() {
+	if(currentNode.num == 1) {
+		var game = getGameFromNode(currentNode);
+		gameInfo.innerHTML = "Game <A href=\"http://www.littlegolem.net/jsp/game/game.jsp?gid=" + game.name + "\" target=\"_blank\">#" + game.name + "</A> <br>" + game.players;
+	} else {
+		gameInfo.innerHTML = currentNode.num.toString() + " games in database";
+	}
+	moveList.innerHTML = getMoveListToNode(currentNode);
+	drawBoard(getPiecesFromNode(currentNode));
+}
+
+function resetClick() {
+	currentNode = root;
+	refreshView();
+}
+
+function backClick() {
+	if(currentNode != root)
+		currentNode = currentNode.parent;
+	refreshView();
+}
+
+function onClick(e) {
+	var pos = getMousePosition(e, canvas);
+	for(var row = 0; row < BOARD_SIZE; row++) {
+		for(var col = SWAP_COL; col < BOARD_SIZE; col++) {
+			var x = (getX(row, col) + OFFSET_X) * SCALE;
+			var	y = (getY(row, col) + OFFSET_Y) * SCALE;
+			var dist2 = (pos.x - x).squared() + (pos.y - y).squared();
+			if(dist2 < (SCALE / 2).squared()) {
+				//currentNode.branches.push({branches: [], isWhite: !currentNode.isWhite, row: row, col: col});
+				currentNode.branches.foreach(function (node) {
+					if(node.row == row && node.col == col) {
+						currentNode = node;
+					}
+				});
+			}
+		}
+	}
+	refreshView();
+}
+
+function drawBoard(pieces) {
+	canvasContext.fillStyle = makeColorString(255, 255, 255);
+	canvasContext.fillRect(0, 0, WIDTH, HEIGHT);
+	//Draw the coordinates
+	canvasContext.fillStyle = makeColorString(0, 0, 0);
+	canvasContext.font = (SCALE / 2).toString() + 'px sans-serif';
+	canvasContext.textBaseline = 'middle';
+	canvasContext.textAlign = 'center';
+	for(var row = 0; row < BOARD_SIZE; row++) {
+		canvasContext.fillText((row + 1).toString(), (getX(row, -1) + OFFSET_X) * SCALE, (getY(row, -1) + OFFSET_Y + .1) * SCALE);
+	}
+	
+	for(var col = 0; col < BOARD_SIZE; col++) {
+		canvasContext.fillText(ALPHABET[col], (getX(-1, col) + OFFSET_X) * SCALE, (getY(-1, col) + OFFSET_Y) * SCALE);
+	}
+	
+	canvasContext.save();
+	canvasContext.scale(SCALE, SCALE);
+	canvasContext.translate(OFFSET_X, OFFSET_Y);
+	
+	//Draw the board
+	function drawBack(size, style1, style2, style3) {
+		for(var row = 0; row < BOARD_SIZE; row++) {
+			for(var col = 0; col < BOARD_SIZE; col++) {
+				if((row + col * 2) % 3 == 0)
+					canvasContext.fillStyle = style1;
+				if((row + col * 2) % 3 == 1)
+					canvasContext.fillStyle = style2;
+				if((row + col * 2) % 3 == 2)
+					canvasContext.fillStyle = style3;
+				canvasContext.save();
+				canvasContext.translate(getX(row, col), getY(row, col));
+				canvasContext.beginPath();
+				canvasContext.moveTo(0, size / Math.sqrt(3));
+				for(var i = 0; i < 5; i++) {
+					canvasContext.rotate(Math.PI / 3);
+					canvasContext.lineTo(0, size / Math.sqrt(3));
+				}
+				canvasContext.closePath();
+				
+				canvasContext.fill();
+				canvasContext.restore();
+			}
+		}
+	}
+	drawBack(1.4, makeColorString(200, 150, 90), makeColorString(200, 150, 90), makeColorString(200, 150, 90));
+	drawBack(1, makeColorString(240, 190, 130), makeColorString(225, 175, 115), makeColorString(210, 160, 100));
+	
+	//Draw the lines:
+	canvasContext.strokeStyle = makeColorString(100, 70, 50);
+	canvasContext.lineWidth = .05;
+	canvasContext.beginPath();
+			
+	for(var row = 0; row < BOARD_SIZE; row++) {
+		for(var col = 0; col < BOARD_SIZE; col++) {
+			canvasContext.save();
+			canvasContext.translate(getX(row, col), getY(row, col));
+			canvasContext.moveTo(0, 1 / Math.sqrt(3));
+			for(var i = 0; i < 6; i++) {
+				canvasContext.rotate(Math.PI / 3);
+				canvasContext.lineTo(0, 1 / Math.sqrt(3));
+			}
+			
+			canvasContext.restore();
+		}
+	}
+	canvasContext.stroke();
+			
+	
+	//Draw the edge lines:
+	canvasContext.lineWidth = .1;
+	canvasContext.lineCap = 'square';
+			
+	for(var side = 0; side < 6; side++) {
+		canvasContext.strokeStyle = side % 3 == 0 ? makeColorString(255, 255, 255)
+		                                          : makeColorString(  0,   0,   0);
+		if(side % 3 == 1)
+			continue;
+			
+		canvasContext.save();
+		canvasContext.beginPath();
+		canvasContext.translate(getX((BOARD_SIZE - 1) / 2, (BOARD_SIZE - 1) / 2), getY((BOARD_SIZE - 1) / 2, (BOARD_SIZE - 1) / 2));
+		canvasContext.rotate(side * Math.PI / 3);
+		canvasContext.translate(-getX((BOARD_SIZE - 1) / 2, (BOARD_SIZE - 1) / 2), -getY((BOARD_SIZE - 1) / 2, (BOARD_SIZE - 1) / 2));
+		
+		if(side % 3 != 0)
+			canvasContext.translate(getX((BOARD_SIZE - 1) / 2, 0), getY((BOARD_SIZE - 1) / 2, 0));
+			
+		canvasContext.translate(-.08 * .866, .08 / 2);
+		
+		var col = 0;
+		var dist = 1;
+		for(var row = BOARD_SIZE - 1; row >= 0; row--) {
+			canvasContext.save();
+			canvasContext.translate(getX(row, col), getY(row, col));
+			if(row == BOARD_SIZE - 1 && col == 0)
+				canvasContext.moveTo(0, dist / Math.sqrt(3));
+				
+			for(var i = 0; i < 2; i++) {
+				if(row == 0 && side % 3 != 0 && i == 1) {
+					canvasContext.rotate(Math.PI / 6);
+					canvasContext.lineTo(0, dist / 2);
+				} else if(row == BOARD_SIZE - 1 && side % 3 == 0 && i == 0) {
+					canvasContext.rotate(Math.PI / 6);
+					canvasContext.moveTo(0, dist / 2);
+					canvasContext.rotate(Math.PI / 6);
+					canvasContext.lineTo(0, dist / Math.sqrt(3));
+				} else {
+					canvasContext.rotate(Math.PI / 3);
+					canvasContext.lineTo(0, dist / Math.sqrt(3));
+				}
+			}
+			
+			canvasContext.restore();
+		}
+		canvasContext.stroke();
+		canvasContext.restore();
+	}
+	
+	pieces.foreach(function (piece) {
+		canvasContext.save();
+		canvasContext.translate(getX(piece.row, piece.col), getY(piece.row, piece.col));
+		if(piece.swap) {
+			canvasContext.fillStyle = makeColorString(0, 0, 0);
+			canvasContext.beginPath();
+			canvasContext.moveTo(0, 0);
+			canvasContext.arc(0, 0, .5, 0, 2 * Math.PI);
+			canvasContext.fill();
+			
+			canvasContext.save();
+			canvasContext.scale(1/ SCALE, 1/SCALE);
+			canvasContext.font = (SCALE / 2).toString() + 'px sans-serif';
+			canvasContext.textBaseline = 'middle';
+			canvasContext.textAlign = 'center';
+			canvasContext.fillText("Swap", 0, -SCALE * .8);
+			canvasContext.restore();
+		}
+		
+		canvasContext.fillStyle = (piece.player == PLAYER_ENUM.WHITE ? makeColorString(255, 255, 255) : makeColorString(0, 0, 0));
+		canvasContext.beginPath();
+		canvasContext.moveTo(0, 0);
+		canvasContext.arc(0, 0, .45, 0, 2 * Math.PI);
+		canvasContext.fill();
+		if(piece.info) {
+			canvasContext.scale(1/ SCALE, 1/SCALE);
+			canvasContext.fillStyle = (piece.player == PLAYER_ENUM.WHITE ? makeColorString(0, 0, 0) : makeColorString(255, 255, 255));
+			canvasContext.font = (SCALE / 3).toString() + 'px sans-serif';
+			canvasContext.textBaseline = 'middle';
+			canvasContext.textAlign = 'center';
+			canvasContext.fillText(piece.num.toString(), 0, -SCALE / 6);
+			if(piece.win == piece.num)
+				canvasContext.scale(.8, 1);
+			canvasContext.fillText(Math.round(100 * piece.win / piece.num).toString() + "%", 0, SCALE / 6);
+		}
+		canvasContext.restore();
+	});
+	
+	
+	canvasContext.restore();
+}
+
+function getPiecesFromNode(node) {
+	var pieces = [];
+	node.branches.foreach(function (subNode) {
+		pieces.push(subNode);
+	});
+	while(!node.isRoot) {
+		if(node.swap) {
+			pieces.push({player: node.player, row: node.parent.col, col: node.parent.row});
+			break;
+		}
+		pieces.push({player: node.player, row: node.row, col: node.col});
+		
+		node = node.parent;
+	}
+	
+	return pieces;
+}
+
+function getMoveListToNode(node) {
+	var moves = [];
+	var moveNum = getMoveNum(node);
+	function getMoveNum(node) {
+		moveNum = 0;
+		while(!node.isRoot) {
+			moveNum++;
+			node = node.parent;
+		}
+		return moveNum;
+	}
+	while(!node.isRoot) {
+		if(node.swap) {
+			moves.push({num: moveNum.toString(), body: "swap"});
+		} else {
+			moves.push({num: moveNum.toString(), body: ALPHABET[node.col] + (node.row + 1).toString()});
+		}
+		moveNum--;
+		node = node.parent;
+	}
+	var moveString = "<table class = \"table-movelist\"><tbody>";
+	for(var i = moves.length - 1; i >= 0; i--) {
+		moveString += "<tr><td class=\"td-turn\">" + moves[i].num + ".</td><td class=\"td-move\">" + moves[i].body + "</td>";
+	}
+	return moveString + "</tbody></table>";
+}
+
+function getGameFromNode(node) {
+	while(node.branches.length > 0)
+		node = node.branches[0];
+	return node.gameList[0];
+}
+
+function addGame(root, game, winner, gameName, players, rotate) {
+	var player = PLAYER_ENUM.BLACK;
+	var node = root;
+	for(var i = 0; i < game.length; i += 2) {
+		var char1 = game[i];
+		var char2 = game[i + 1];
+		var branch = null;
+		if(char1 == '.') {
+			if(char2 == 's') {
+				
+				for(var j = 0; j < node.branches.length; j++) {
+					if(node.branches[j].swap) {
+						branch = node.branches[j];
+						break;
+					}
+				}
+				if(branch == null) {
+					branch = {branches: [], parent: node, player: player, swap: true, row: SWAP_ROW, col: SWAP_COL, info: true, num: 0, win: 0};
+					node.branches.push(branch);
+				}
+			} else if(char2 == 'r') {
+				break;
+			}
+		} else {
+			var col = ALPHA_LOOKUP[char1];
+			var row = ALPHA_LOOKUP[char2];
+			if(rotate) {
+				row = BOARD_SIZE - 1 - row;
+				col = BOARD_SIZE - 1 - col;
+			}
+			for(var j = 0; j < node.branches.length; j++) {
+				if(node.branches[j].row == row && node.branches[j].col == col) {
+					branch = node.branches[j];
+					break;
+				}
+			}
+			if(branch == null) {
+				branch = {branches: [], parent: node, player: player, row: row, col: col, info: true, num: 0, win: 0};
+				node.branches.push(branch);
+			}
+		}
+		branch.num++;
+		if(player == winner)
+			branch.win++;
+		
+		node = branch;
+		
+		player = (player == PLAYER_ENUM.BLACK ? PLAYER_ENUM.WHITE : PLAYER_ENUM.BLACK);
+	
+	}
+	
+	if(!node.gameList)
+		node.gameList = [];
+		
+	node.gameList.push({name: gameName, players: players});
+}
+
+//////////
+// Init //
+//////////
+var canvas = document.getElementById("canvas");
+canvas.width = WIDTH;
+canvas.height = HEIGHT;
+
+var gameInfo = document.getElementById("gameInfo");
+var moveList = document.getElementById("moveList");
+
+
+canvas.addEventListener("click", onClick, false);
+
+var canvasContext = canvas.getContext("2d");
+
+var root = {branches: [], isRoot: true, num: games.length};
+
+var currentNode = root;
+
+games.foreach(function(game) {
+	addGame(root, game.data, game.win_b ? PLAYER_ENUM.BLACK : PLAYER_ENUM.WHITE, game.game, game.black + " vs " + game.white, true);
+	addGame(root, game.data, game.win_b ? PLAYER_ENUM.BLACK : PLAYER_ENUM.WHITE, game.game, game.black + " vs " + game.white, false);
+});
+
+refreshView();
+
+
+
