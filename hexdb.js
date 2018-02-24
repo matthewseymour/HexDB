@@ -20,8 +20,8 @@ var SWAP_COL = -4;
 var OFFSET_X = 1.3;
 var OFFSET_Y = 1.3;
 var BOARD_SIZE = 13;
-var FIRST_MOVE_CUTOFF = 1;
-
+var FIRST_MOVE_CUTOFF = 1;//20;
+var GAME_NUM_CUTOFF = 0;//1600000;
 var BACK_BUTTON_X = (BOARD_SIZE + 3);
 var BACK_BUTTON_Y = (2);
 var PLAYER_ENUM = {BLACK: 1, WHITE: 2};
@@ -31,6 +31,8 @@ for(var i = 0; i < ALPHABET.length; i++)
 	ALPHA_LOOKUP[ALPHABET[i]] = i;
 
 var swapCheckBox = document.getElementById("swap");
+var transCheckBox = document.getElementById("trans");
+
 
 
 function makeColorString(red, green, blue) {
@@ -63,13 +65,22 @@ function getY(row, col) { return row * .866;}
 
 function refreshView() {
 	if(currentNode.num == 1) {
-		var game = getGameFromNode(currentNode);
-		gameInfo.innerHTML = "Game <A href=\"http://www.littlegolem.net/jsp/game/game.jsp?gid=" + game.name + "\" target=\"_blank\">#" + game.name + "</A> <br>" + "<A href=\"" + getTrmphLink(game.gameData) + "\" target=\"_blank\">Trmph</A> <br>" + game.players;
+        gameInfo.innerHTML = "1 game in database"
 	} else {
 		gameInfo.innerHTML = currentNode.num.toString() + " games in database";
 	}
+    if(currentNode.gameList) {
+        for(var i = 0; i < currentNode.gameList.length && i < 50; i++) {
+            gameInfo.innerHTML += "<br>" + gameInfoString(currentNode.gameList[i]);
+        }
+    }
+    
 	moveList.innerHTML = getMoveListToNode(currentNode);
-	drawBoard(getPiecesFromNode(currentNode));
+	drawBoard(getPiecesFromNode(currentNode), currentNode.num);
+}
+
+function gameInfoString(game) {
+    return "Game <A href=\"http://www.littlegolem.net/jsp/game/game.jsp?gid=" + game.name + "\" target=\"_blank\">#" + game.name + "</A> (<A href=\"" + getTrmphLink(game.gameData) + "\" target=\"_blank\">Trmph</A>) " + game.players + " " + game.winner;
 }
 
 function resetClick() {
@@ -93,6 +104,10 @@ function swapBoxClicked() {
 	refreshView();
 }
 
+function transBoxClicked() {
+    refreshView();
+}
+
 function onClick(e) {
 	var pos = getMousePosition(e, canvas);
 	for(var row = 0; row < BOARD_SIZE; row++) {
@@ -113,7 +128,7 @@ function onClick(e) {
 	refreshView();
 }
 
-function drawBoard(pieces) {
+function drawBoard(pieces, totalGames) {
 	canvasContext.fillStyle = makeColorString(255, 255, 255);
 	canvasContext.fillRect(0, 0, WIDTH, HEIGHT);
 	//Draw the coordinates
@@ -231,9 +246,19 @@ function drawBoard(pieces) {
 		canvasContext.stroke();
 		canvasContext.restore();
 	}
+    
+    var maxNum = 1;
+    pieces.foreach(function (piece) {
+        if(piece.info) {
+            maxNum = Math.max(maxNum, piece.num);
+        }
+    });
 	
 	pieces.foreach(function (piece) {
 		canvasContext.save();
+        if(piece.info && transCheckBox.checked) {
+            canvasContext.globalAlpha = 0.35 + 0.65 * piece.num / maxNum;
+        }
 		canvasContext.translate(getX(piece.row, piece.col), getY(piece.row, piece.col));
 		if(piece.swap) {
 			canvasContext.fillStyle = makeColorString(0, 0, 0);
@@ -424,15 +449,15 @@ function addGame(root, game, winner, gameName, playerBlack, playerWhite, rotate,
 			branch.win++;
 		
 		node = branch;
+    	
+        if(!node.gameList)
+    		node.gameList = [];
 		
-		player = (player == PLAYER_ENUM.BLACK ? PLAYER_ENUM.WHITE : PLAYER_ENUM.BLACK);
+    	node.gameList.push({name: gameName, players: players, gameData: game, winner: winner == PLAYER_ENUM.BLACK ? "1-0" : "0-1"});
+        
+        player = (player == PLAYER_ENUM.BLACK ? PLAYER_ENUM.WHITE : PLAYER_ENUM.BLACK);
 	
 	}
-	
-	if(!node.gameList)
-		node.gameList = [];
-		
-	node.gameList.push({name: gameName, players: players, gameData: game});
 }
 
 //////////
@@ -450,16 +475,22 @@ canvas.addEventListener("click", onClick, false);
 
 var canvasContext = canvas.getContext("2d");
 
-var rootSwap = {branches: [], isRoot: true, num: games.length};
-var rootNoSwap = {branches: [], isRoot: true, num: games.length};
+var rootSwap = {branches: [], isRoot: true, num: 0};
+var rootNoSwap = {branches: [], isRoot: true, num: 0};
 
-
+var numGames = 0;
 games.foreach(function(game) {
-	addGame(rootSwap, game.data, game.win_b ? PLAYER_ENUM.BLACK : PLAYER_ENUM.WHITE, game.game, game.black, game.white, true , false);
-	addGame(rootSwap, game.data, game.win_b ? PLAYER_ENUM.BLACK : PLAYER_ENUM.WHITE, game.game, game.black, game.white, false, false);
-	addGame(rootNoSwap, game.data, game.win_b ? PLAYER_ENUM.BLACK : PLAYER_ENUM.WHITE, game.game, game.black, game.white, true , true);
-	addGame(rootNoSwap, game.data, game.win_b ? PLAYER_ENUM.BLACK : PLAYER_ENUM.WHITE, game.game, game.black, game.white, false, true);
+    if(parseInt(game.game) >= GAME_NUM_CUTOFF) {
+        numGames++;
+    	addGame(rootSwap, game.data, game.win_b ? PLAYER_ENUM.BLACK : PLAYER_ENUM.WHITE, game.game, game.black, game.white, true , false);
+    	addGame(rootSwap, game.data, game.win_b ? PLAYER_ENUM.BLACK : PLAYER_ENUM.WHITE, game.game, game.black, game.white, false, false);
+    	addGame(rootNoSwap, game.data, game.win_b ? PLAYER_ENUM.BLACK : PLAYER_ENUM.WHITE, game.game, game.black, game.white, true , true);
+    	addGame(rootNoSwap, game.data, game.win_b ? PLAYER_ENUM.BLACK : PLAYER_ENUM.WHITE, game.game, game.black, game.white, false, true);
+    }
 });
+rootSwap.num = numGames;
+rootNoSwap.num = numGames;
+
 
 var root;
 if(swapCheckBox.checked) { 

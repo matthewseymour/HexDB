@@ -8,20 +8,21 @@
 	.table-movelist { border-spacing: 0px; font-family: monospace;}
 	.td-turn { width: 25px; text-align: right; border-bottom: 1px solid #ccc;}
 	.td-move { width: 75px; border-bottom: 1px solid #ccc;}
-	#gameInfo { padding: 10px; }
-	#moveList {background-color: #fafafa; height: 530px; overflow-y: auto;}
+	#gameInfo { padding: 10px;}
+	#moveList {background-color: #fafafa; height: 80vh; overflow-y: auto;}
 	#infoPane { float:left; padding: 20px; } 
 	#head { top:0; bottom:0px; }
 	#foot { top:0; bottom:0; }
 </style>
 <body>
-<div style="float: left">
+<div style="float: left; height: 100vh; overflow-y: auto;">
 <canvas id="canvas" >Get a better browser</canvas>
 <div id="gameInfo"> </div>
 </div>
 <div id="infoPane">
 
-<label><input id = "swap" type = "checkbox" name = "swap" onclick="swapBoxClicked()"/> With swap </label>
+<label><input id = "swap" type = "checkbox" name = "swap" onclick="swapBoxClicked()"/>With swap</label><br>
+<label><input id = "trans" type = "checkbox" name = "trans" onclick="transBoxClicked()" checked/>Transparency</label>
 
 <div> Move List:</div>
 <button name="button" onclick="backClick()">Back</button>
