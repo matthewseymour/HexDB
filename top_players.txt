@@ -36,3 +36,5 @@
 7861:  wojtex
 21658: iLyN Sin
 15078: wojtek
+74268: leela_bot
+58835: gzero_bot

@@ -26,7 +26,7 @@ class Result:
     TIMEOUT = object()
     
 MIN_MOVES = 5
-
+GAME_NUM_MIN = 2055156 
 
 def constructUrl(gamesList):
     gids = ["gid=" + str(game) for game in gamesList]
@@ -264,7 +264,10 @@ def findGame(rowString):
  
     return gameNum, playerString, rating, resultString, moves
 
-def filterGame(rating, player, result, moves, playerNames):
+def filterGame(num, rating, player, result, moves, playerNames):
+    if num < GAME_NUM_MIN:
+        return False
+
     #never return unfinished games
     if result == "(none)":
         return False
@@ -295,7 +298,7 @@ def getPlayerGameList(playerId, playerNames):
     games = [findGame(gameRow) for gameRow in findGameRows(findGameTable(data))]
     
     #game format is (num, player, rating, result)
-    gamesFiltered = [game for game in games if filterGame(game[2], game[1], game[3], game[4], playerNames)]
+    gamesFiltered = [game for game in games if filterGame(game[0], game[2], game[1], game[3], game[4], playerNames)]
     
     return gamesFiltered
     
@@ -355,6 +358,11 @@ def writeDataToFile(data, file):
     f.write(data)
     f.close()
 
+#downloads all games from players in the topPlayersFile that aren't currently in dbFile.
+#results are divided into three categories, each of which is output to a different file.
+#New, finished games are output to the outputFinishedFile
+#New, timed out games (a player lost due to timeout rather than resignation) are outout to outputTimeoutFile
+#New games that are still in progress are output to outputInProgressFile
 def collectAndDownloadGameList(topPlayersFile, dbFile, outputFinishedFile, outputTimeoutFile, outputInProgressFile):
     outputFinished, outputTimeout, outputInProgress = downloadGameList(collectAllGamesToDl(topPlayersFile, dbFile))
     writeDataToFile(outputFinished, outputFinishedFile)
