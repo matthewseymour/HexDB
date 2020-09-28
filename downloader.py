@@ -208,12 +208,12 @@ def constructGameListUrl(playerId):
     return "http://www.littlegolem.net/jsp/info/player_game_list.jsp?gtid=hex&plid={0}".format(playerId)
 
 def findGameTable(data):
-   
-   findTable = re.compile("<table cellspacing='3' cellpadding='0' border='0' width=\"100%\">(.*?)</table>", re.DOTALL)
+   findTable = re.compile("<table cellspacing='3' cellpadding='2' border='0' width=\"100%\">(.*?)</table>", re.DOTALL)
    
    findTableMatch = findTable.search(data)
    
    if findTableMatch == None:
+      print "Table not found"
       return "Nothing found"
    else:
       return findTableMatch.group(1)
@@ -224,6 +224,8 @@ def findGameRows(tableString):
    
    rows = findRow.findall(tableString)
    
+   print("{0} rows found".format(len(rows)))
+
    return rows[1:] #first row is headers, discard it
 
 def findGame(rowString):
@@ -233,7 +235,7 @@ def findGame(rowString):
     if gameInfo != None:
         gameNum = int(gameInfo.group(1))
 
-    findPlayer = re.compile("<td bgcolor='#E9D101'>(.*?)</td>")
+    findPlayer = re.compile("<td bgcolor='#E9D101'>(.*?)&nbsp;</td>")
     playerInfo = findPlayer.search(rowString)
     playerString = ""
     if playerInfo == None:
@@ -241,19 +243,19 @@ def findGame(rowString):
     else:
         playerString = playerInfo.group(1)
   
-    findRating = re.compile("<td align='middle' nowrap >([0-9]*?)</td>")
+    findRating = re.compile("<td align='middle' nowrap >([0-9]*?)&nbsp;</td>")
     ratingInfo = findRating.search(rowString)
     rating = 0
     if ratingInfo != None:
         rating = int(ratingInfo.group(1))
 
-    findMoves = re.compile("<td align='right'>([0-9]*?)</td>")
+    findMoves = re.compile("<td align='right'>([0-9]*?)&nbsp;</td>")
     movesInfo = findMoves.search(rowString)
     moves = 0
     if movesInfo != None:
         moves = int(movesInfo.group(1))
   
-    findResult = re.compile('<td align=center>(.*?)</td>')
+    findResult = re.compile('<td align=center>(.*?)&nbsp;</td>')
     resultInfo = findResult.search(rowString)
     resultString = ""
     if resultInfo == None:
@@ -261,6 +263,7 @@ def findGame(rowString):
     else:
         resultString = resultInfo.group(1)
 
+    #print "{} {} {} {} {}".format(gameNum, playerString, rating, resultString, moves)
  
     return gameNum, playerString, rating, resultString, moves
 
@@ -321,6 +324,7 @@ def collectAllGamesToDl(topPlayersFile, dbFile):
         time.sleep(1)
         
         gameList = getPlayerGameList(playerId, topPlayerNames)
+        print "{0} games found".format(len(gameList))
         for gameEntry in gameList:
             newGames.add(gameEntry[0]) #first part is the game number
         
