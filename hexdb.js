@@ -21,7 +21,7 @@ var OFFSET_X = 1.3;
 var OFFSET_Y = 1.3;
 var BOARD_SIZE = 13;
 var FIRST_MOVE_CUTOFF = 1;//20;
-var GAME_NUM_CUTOFF = 0;//1600000;
+var GAME_NUM_CUTOFF = 1600000; //This is the real one
 var BACK_BUTTON_X = (BOARD_SIZE + 3);
 var BACK_BUTTON_Y = (2);
 var PLAYER_ENUM = {BLACK: 1, WHITE: 2};
@@ -33,7 +33,36 @@ for(var i = 0; i < ALPHABET.length; i++)
 var swapCheckBox = document.getElementById("swap");
 var transCheckBox = document.getElementById("trans");
 
+var defaultFilter = function(game) {return true;};
 
+var recentGameFilter = function(game) {
+	if(parseInt(game.game) >= GAME_NUM_CUTOFF)
+		return true;
+	else
+		return false;
+}
+
+var veryGoodPlayerFilter = function(game) {
+	var names = ["Maciej Celuch", "Arek Kulczycki", "Daniel Sepczuk", "shalev", "lazyplayer", "leela_bot"];
+	if(names.indexOf(game.black) != -1 || names.indexOf(game.white) != -1) {
+		if(parseInt(game.game) > GAME_NUM_CUTOFF) {
+			return true;
+		}
+	}
+	return false;
+}
+
+var onlyGoodPlayerFilter = function(game) {
+	var names = ["Maciej Celuch", "Arek Kulczycki", "Daniel Sepczuk", "shalev", "lazyplayer", "leela_bot"];
+	if(names.indexOf(game.black) != -1 && names.indexOf(game.white) != -1) {
+		if(parseInt(game.game) > GAME_NUM_CUTOFF) {
+			return true;
+		}
+	}
+	return false;
+}
+
+var gameFilter = defaultFilter;
 
 function makeColorString(red, green, blue) {
 	return "rgb(" + red.toString() + "," + green.toString() + "," + blue.toString() + ")";
@@ -68,6 +97,9 @@ function refreshView() {
         gameInfo.innerHTML = "1 game in database"
 	} else {
 		gameInfo.innerHTML = currentNode.num.toString() + " games in database";
+	}
+	if(gameFilter != defaultFilter) {
+		gameInfo.innerHTML += "<br><span style='color:red'>Non-default filter in use!</span>";
 	}
     if(currentNode.gameList) {
         for(var i = 0; i < currentNode.gameList.length && i < 50; i++) {
@@ -253,6 +285,7 @@ function drawBoard(pieces, totalGames) {
             maxNum = Math.max(maxNum, piece.num);
         }
     });
+	maxNum = Math.min(maxNum, 600);
 	
 	pieces.foreach(function (piece) {
 		canvasContext.save();
@@ -288,6 +321,7 @@ function drawBoard(pieces, totalGames) {
 			canvasContext.textBaseline = 'middle';
 			canvasContext.textAlign = 'center';
 			canvasContext.fillText(piece.num.toString(), 0, -SCALE / 6);
+			//canvasContext.fillText((Math.round(1000 * piece.num/totalGames)/10).toString(), 0, -SCALE / 6);
 			if(piece.win == piece.num)
 				canvasContext.scale(.8, 1);
 			canvasContext.fillText(Math.round(100 * piece.win / piece.num).toString() + "%", 0, SCALE / 6);
@@ -479,8 +513,10 @@ var rootSwap = {branches: [], isRoot: true, num: 0};
 var rootNoSwap = {branches: [], isRoot: true, num: 0};
 
 var numGames = 0;
+
 games.foreach(function(game) {
-    if(parseInt(game.game) >= GAME_NUM_CUTOFF) {
+    //if(parseInt(game.game) >= GAME_NUM_CUTOFF) {
+	if(gameFilter(game)) {
         numGames++;
     	addGame(rootSwap, game.data, game.win_b ? PLAYER_ENUM.BLACK : PLAYER_ENUM.WHITE, game.game, game.black, game.white, true , false);
     	addGame(rootSwap, game.data, game.win_b ? PLAYER_ENUM.BLACK : PLAYER_ENUM.WHITE, game.game, game.black, game.white, false, false);
