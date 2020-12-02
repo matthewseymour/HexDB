@@ -43,7 +43,7 @@ var recentGameFilter = function(game) {
 }
 
 var veryGoodPlayerFilter = function(game) {
-	var names = ["Maciej Celuch", "Arek Kulczycki", "Daniel Sepczuk", "shalev", "lazyplayer", "leela_bot"];
+	var names = ["Maciej Celuch", "Arek Kulczycki", "Daniel Sepczuk", "shalev", "lazyplayer", "leela_bot", "gzero_bot", "mootwo"];
 	if(names.indexOf(game.black) != -1 || names.indexOf(game.white) != -1) {
 		if(parseInt(game.game) > GAME_NUM_CUTOFF) {
 			return true;
@@ -53,7 +53,7 @@ var veryGoodPlayerFilter = function(game) {
 }
 
 var onlyGoodPlayerFilter = function(game) {
-	var names = ["Maciej Celuch", "Arek Kulczycki", "Daniel Sepczuk", "shalev", "lazyplayer", "leela_bot"];
+	var names = ["Maciej Celuch", "Arek Kulczycki", "Daniel Sepczuk", "shalev", "lazyplayer", "leela_bot", "gzero_bot", "mootwo"];
 	if(names.indexOf(game.black) != -1 && names.indexOf(game.white) != -1) {
 		if(parseInt(game.game) > GAME_NUM_CUTOFF) {
 			return true;
@@ -62,7 +62,26 @@ var onlyGoodPlayerFilter = function(game) {
 	return false;
 }
 
-var gameFilter = defaultFilter;
+var computerFilter = function(game) {
+	var names = ["gzero_bot", "mootwo", "leela_bot"];
+	if(names.indexOf(game.black) != -1 || names.indexOf(game.white) != -1) {
+		if(parseInt(game.game) > GAME_NUM_CUTOFF) {
+			return true;
+		}
+	}
+	return false;
+}
+
+var onlyComputerFilter = function(game) {
+	var names = ["gzero_bot", "mootwo", "leela_bot"];
+	if(names.indexOf(game.black) != -1 && names.indexOf(game.white) != -1) {
+		if(parseInt(game.game) > GAME_NUM_CUTOFF) {
+			return true;
+		}
+	}
+	return false;
+}
+var gameFilter = computerFilter;
 
 function makeColorString(red, green, blue) {
 	return "rgb(" + red.toString() + "," + green.toString() + "," + blue.toString() + ")";
