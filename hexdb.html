@@ -1,36 +1,57 @@
-<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0">
+<defs>
+<marker id="markerArrow" markerWidth="4" markerHeight="6" refX="1.1" refY="3" orient="auto">
+<path d="M 1 1 L 3 3 L 1 5" class="arrowHeadWhite"></path>
+</marker>
+</defs>
+</svg>
+<link rel="stylesheet" type="text/css" href="hexdb.css" />
 </head>
-<style type="text/css">
-	html,body { background:#fff; height:100%; margin:0; padding:0; overflow:hidden; background-color: #ffffff }
-	canvas { } 
-	.table-movelist { border-spacing: 0px; font-family: monospace;}
-	.td-turn { width: 25px; text-align: right; border-bottom: 1px solid #ccc;}
-	.td-move { width: 75px; border-bottom: 1px solid #ccc;}
-	#gameInfo { padding: 10px;}
-	#moveList {background-color: #fafafa; height: 80vh; overflow-y: auto;}
-	#infoPane { float:left; padding: 20px; } 
-	#head { top:0; bottom:0px; }
-	#foot { top:0; bottom:0; }
-</style>
 <body>
-<div style="float: left; height: 100vh; overflow-y: auto;">
-<canvas id="canvas" >Get a better browser</canvas>
+<div id="wrapper">
+<svg id="board"> </svg>
 <div id="gameInfo"> </div>
-</div>
 <div id="infoPane">
 
-<label><input id = "swap" type = "checkbox" name = "swap" onclick="swapBoxClicked()"/>With swap</label><br>
+<label>Size: <select id='selectSize'>
+  <option value="11">11</option>
+  <option value="13" selected>13</option>
+  <option value="15">15</option>
+  <option value="19">19</option>  
+</select></label>
+<label><input id = "swap" type = "checkbox" name = "swap" onclick="swapBoxClicked()"/>With swap</label>
 <label><input id = "trans" type = "checkbox" name = "trans" onclick="transBoxClicked()" checked/>Transparency</label>
 
 <div> Move List:</div>
-<button name="button" onclick="backClick()">Back</button>
-<button name="button" onclick="resetClick()">Reset</button>
+<div id="ctrlButtonsHolder">
+<svg xmlns="http://www.w3.org/2000/svg" width="29" height="29" viewBox="-14.5 -14.5 29 29">
+<g id="next" class="ctrlButton" onclick="backClick()">
+<title>Previous move</title><circle class="boardButton" cx="0" cy="0" r="12"></circle>
+<path d="M -5 0 L 2 7 L 2 -7" class="boardButtonFill"></path>
+</g>
+</svg><svg xmlns="http://www.w3.org/2000/svg" width="29" height="29" viewBox="-14.5 -14.5 29 29">
+<g id="reset" class="ctrlButton" onclick="resetClick()">
+<title>Reset board</title>
+<circle class="boardButton" cx="0" cy="0" r="12"></circle>
+<path d="M 4.24264068712 4.24264068712 A 6 6 0 1 1 4.24264068712 -4.24264068712" class="boardButtonLabel boardButtonRefreshLabel"></path>
+</g>
+</svg>
+</div>
 <div id="moveList" ></div>
 </div>
+<div id="copyright-notice">
+<p>Copyright &copy; 2021 Matthew Seymour</p>
+<p id="questions">Questions or comments? Contact me at matthew.seymour@gmail.com</p>
+</div>
+</div>
 
+<script src=game_data11.js type="text/javascript"></script>
 <script src=game_data.js type="text/javascript"></script>
+<script src=game_data15.js type="text/javascript"></script>
+<script src=game_data19.js type="text/javascript"></script>
+<script src=hexdraw.js type="text/javascript"></script>
 <script src=hexdb.js type="text/javascript"></script>
 </body>
 </html> 

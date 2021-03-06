@@ -15,7 +15,7 @@
 # x Write out new games to DB
 
 
-import urllib2
+import urllib.request
 import time
 import re
 
@@ -26,7 +26,8 @@ class Result:
     TIMEOUT = object()
     
 MIN_MOVES = 5
-GAME_NUM_MIN = 2055156 
+#GAME_NUM_MIN = 2055156 
+GAME_NUM_MIN =  1000000
 
 def constructUrl(gamesList):
     gids = ["gid=" + str(game) for game in gamesList]
@@ -81,11 +82,15 @@ def parseGameText(text):
 
     gameMoveData = "".join([convertMove(m) for m in gameMoves])
 
-    parsed = 'games.push({{data: "{0}", win_b: {1}, game: "{2}", white: "{3}", black: "{4}"}});'.format(gameMoveData, winnerBlack, gameNumber, playerWhite, playerBlack)
+    sizeSuffix = ""
+    if size != "13":
+        sizeSuffix = size
+
+    parsed = 'games{5}.push({{data: "{0}", win_b: {1}, game: "{2}", white: "{3}", black: "{4}"}});'.format(gameMoveData, winnerBlack, gameNumber, playerWhite, playerBlack, sizeSuffix)
     
     return result, parsed, size, gameNumber
 
-def parseResponse(data):
+def parseResponse(data, size):
     findGamesRe = re.compile("\(;(.*?)\)\n") #input format is (; ... ) for each game, this finds these.
 
     gamesText = findGamesRe.findall(data)
@@ -93,22 +98,19 @@ def parseResponse(data):
     outputFinished = ""
     outputTimeout = ""
     outputInProgress = ""
-    outputSmallGames = ""
     for game in gamesText:
-        result, parsed, size, gameNumber = parseGameText(game)
-        if size == "13":
+        result, parsed, gameSize, gameNumber = parseGameText(game)
+        if int(gameSize) == size:
             if result == Result.FINISHED:
                 outputFinished += parsed + "\n"
             elif result == Result.TIMEOUT:
                 outputTimeout += parsed + "\n"
             elif result == Result.IN_PROGRESS:
                 outputInProgress += parsed + "\n"
-        else:
-            outputSmallGames += gameNumber + "\n"
-            print "{0},{1}".format(size, gameNumber)
+            print("{0},{1}".format(size, gameNumber))
             
     
-    return outputFinished, outputTimeout, outputInProgress, outputSmallGames
+    return outputFinished, outputTimeout, outputInProgress
        
 
 
@@ -119,7 +121,7 @@ def parseResponse(data):
 #
 
 def findDbGameRows(tableString):
-   findRow = re.compile("games.push\((.*?)\);")
+   findRow = re.compile("games(?:11|15|19|).push\((.*?)\);")
    
    rows = findRow.findall(tableString)
    
@@ -140,7 +142,7 @@ def findGameNumber(gameString):
    return game.group(1)
 
 def findDbGameRows(tableString):
-   findRow = re.compile("games.push\((.*?)\);")
+   findRow = re.compile("games(?:11|15|19|).push\((.*?)\);")
    
    rows = findRow.findall(tableString)
    
@@ -213,7 +215,7 @@ def findGameTable(data):
    findTableMatch = findTable.search(data)
    
    if findTableMatch == None:
-      print "Table not found"
+      print("Table not found")
       return "Nothing found"
    else:
       return findTableMatch.group(1)
@@ -293,10 +295,10 @@ def filterGame(num, rating, player, result, moves, playerNames):
 
 def getPlayerGameList(playerId, playerNames):
     url = constructGameListUrl(playerId)
-    print url
+    print(url)
     
-    response = urllib2.urlopen(url)
-    data = response.read()
+    response = urllib.request.urlopen(url)
+    data = response.read().decode('utf-8')
     
     games = [findGame(gameRow) for gameRow in findGameRows(findGameTable(data))]
     
@@ -319,12 +321,13 @@ def collectAllGamesToDl(topPlayersFile, dbFile):
     newGames = set()
     
     earlyBreak = 0 #0 = no early break
-    for playerId in topPlayerIds:
-        print "Waiting 1 second..."
+    for playerId, playerName in zip(topPlayerIds, topPlayerNames):
+        print("Waiting 1 second...")
         time.sleep(1)
         
+        print(playerName)
         gameList = getPlayerGameList(playerId, topPlayerNames)
-        print "{0} games found".format(len(gameList))
+        print("{0} games found".format(len(gameList)))
         for gameEntry in gameList:
             newGames.add(gameEntry[0]) #first part is the game number
         
@@ -334,23 +337,23 @@ def collectAllGamesToDl(topPlayersFile, dbFile):
     
     newGames -= dbGames
     
-    print "New games ({0}):".format(len(newGames))
+    print("New games ({0}):".format(len(newGames)))
     return list(newGames)
     
-def downloadGameList(games):
+def downloadGameList(games, size):
     #only download groups of 100 games at a time
     maxDownload = 100
     listFinished = ""
     listTimeout = ""
     listInProgress = ""
     for i in range(0, len(games), maxDownload):
-        print "Waiting 1 second..."
+        print("Waiting 1 second...")
         time.sleep(1)
         url = constructUrl(games[i:i + maxDownload])
-        print url
-        response = urllib2.urlopen(url)
-        data = response.read()
-        outputFinished, outputTimeout, outputInProgress, outputSmallGames = parseResponse(data)
+        print(url)
+        response = urllib.request.urlopen(url)
+        data = response.read().decode('utf-8')
+        outputFinished, outputTimeout, outputInProgress = parseResponse(data, size)
         listFinished += outputFinished
         listTimeout += outputTimeout
         listInProgress += outputInProgress
@@ -367,32 +370,18 @@ def writeDataToFile(data, file):
 #New, finished games are output to the outputFinishedFile
 #New, timed out games (a player lost due to timeout rather than resignation) are outout to outputTimeoutFile
 #New games that are still in progress are output to outputInProgressFile
-def collectAndDownloadGameList(topPlayersFile, dbFile, outputFinishedFile, outputTimeoutFile, outputInProgressFile):
-    outputFinished, outputTimeout, outputInProgress = downloadGameList(collectAllGamesToDl(topPlayersFile, dbFile))
+def collectAndDownloadGameList(topPlayersFile, size, dbFile, outputFinishedFile, outputTimeoutFile, outputInProgressFile):
+    outputFinished, outputTimeout, outputInProgress = downloadGameList(collectAllGamesToDl(topPlayersFile, dbFile), size)
     writeDataToFile(outputFinished, outputFinishedFile)
     writeDataToFile(outputTimeout, outputTimeoutFile)
     writeDataToFile(outputInProgress, outputInProgressFile)
 
-def checkSizes(dbFile):
-    players, games = readDb(dbFile)
-    games = list(games)
-    listSmallGames = ""
-    maxDownload = 100
-    for i in range(0, len(games), maxDownload):
-        print "Waiting 1 second..."
-        time.sleep(1)
-        url = constructUrl(games[i:i + maxDownload])
-        print url
-        response = urllib2.urlopen(url)
-        data = response.read()
-        outputFinished, outputTimeout, outputInProgress, outputSmallGames = parseResponse(data)
-        listSmallGames += outputSmallGames
-    
-    return listSmallGames
-
-#print checkSizes("game_data.js")
-
-collectAndDownloadGameList("top_players.txt", "game_data.js", "new_game_data.js", "timeout_game_data.js", "in_progress_game_data.js")
+print("DOUBLE CHECK THAT DB PARSING IS WORKING, THEN REMOVE THIS MESSAGE")
+#collectAndDownloadGameList("top_players.txt", 11, "game_data11.js", "new_game_data11.js", "timeout_game_data11.js", "in_progress_game_data11.js")
+#collectAndDownloadGameList("top_players.txt", 13, "game_data.js", "new_game_data.js", "timeout_game_data.js", "in_progress_game_data.js")
+collectAndDownloadGameList("top_players.txt", 15, "game_data15.js", "new_game_data15.js", "timeout_game_data15.js", "in_progress_game_data15.js")
+#collectAndDownloadGameList("top_players.txt", 19, "game_data19.js", "new_game_data19.js", "timeout_game_data19.js", "in_progress_game_data19.js")
+print("DOUBLE CHECK THAT DB PARSING IS WORKING, THEN REMOVE THIS MESSAGE")
 
     
 
