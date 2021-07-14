@@ -114,3 +114,9 @@ games11.push({data: "KG.sGHEDDCEGFGGEHEHDJCHCCECDBEFBDDCGCIDHJBIDJDIEJEIFCHEFKFJ
 games11.push({data: "ACDEHDGHIHIJEHGEFEGDEEFCEDECDDDCCDCBGCFDCCDBBBBCADBDAEBEAFBFAGBGAHBIBHCHHEFGGGFHHHHGJFIE", win_b: false, game: "1834641", white: "Grzeniu", black: "Force majeure"});
 games11.push({data: "ACDEHGHIIIHJIJIHJFKGGIHDFEGCEDEEFDFFEFEGGEHFGFGGFGFHCIDIEHEIBI", win_b: true, game: "1834690", white: "Grzeniu", black: "shalev"});
 games11.push({data: "AH.sJBHIJIJHDHBJGEFGCIEFDFDGBHCGBGCFBFCEBECDBDCBCCDBDCEBECFBHEFCGGFHGHFJFIEJ", win_b: false, game: "1810382", white: "shalev", black: "Shumacher;"});
+
+//Update July 14, 2021
+games11.push({data: "CBFFGHDEBEIECFCGEFEGHDGE", win_b: false, game: "2232067", white: "So Lost", black: "shalev"});
+games11.push({data: "CBHDHGDHGEFGEGEHHFHEBIGHDGGF", win_b: false, game: "2242236", white: "Daniel Sepczuk", black: "lazyplayer"});
+games11.push({data: "FC.sHDGHHHGIHIHGDHFEGFHCICJAJCGJEG", win_b: true, game: "2242354", white: "So Lost", black: "Daniel Sepczuk"});
+games11.push({data: "CBFFIHIEBHDEHDEHGFGEHEGGFGFHEG", win_b: true, game: "2242355", white: "So Lost", black: "Daniel Sepczuk"});
