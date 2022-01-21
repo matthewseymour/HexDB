@@ -139,3 +139,6 @@ games11.push({data: "CBHDHGDHCFFEJCJBICHCIBIEJFKDHEIDBIDIDGFG", win_b: false, ga
 games11.push({data: "KD.sIHHDCDHIHHDHEGIIGIDDFEFJJHHCCEDEDG", win_b: true, game: "2260081", white: "Daniel Sepczuk", black: "lazyplayer"});
 games11.push({data: "BB.sHGICEDFJDIEEHDHCGDFCGCHAJBHBGBGAEBDHDEHEJD", win_b: true, game: "2241925", white: "So Lost", black: "shalev"});
 games11.push({data: "FCFFIHIIHIIGJGDEGF", win_b: true, game: "2269005", white: "So Lost", black: "Daniel Sepczuk"});
+games11.push({data: "AK.sDEDHIDHIEHEGIIIHCHCIHGICHDGBJCHCJBJAFEDCCCDBCBFDHBIBDFGGFGFJGDDJEJGFJFGIFFEIFIFHGHEKDKIEKDKCJDKEJEIGIFGCCDEEEFCADACEDD", win_b: true, game: "2185881", white: "lazyplayer", black: "mootwo"});
+games11.push({data: "AK.sDHEDDDECBCDEHCGFFEGBHFIAJAIBJBICJCIDBFGGJDIECGBGCFDIEHEIFHFIGHGIIHHHIGCHDGHGJEIIHIAAGJFKGKJFIF", win_b: true, game: "2221456", white: "lazyplayer", black: "Chrisek"});
+games11.push({data: "EC.sGEFGIHICJBFDGDIGEFEIDHDGDJEGJEIJHGHHFHGGGHHFIFFJEHDICICJBJBKAKIDKCKBJCKDJD", win_b: true, game: "2192088", white: "lazyplayer", black: "Daniel Sepczuk"});
