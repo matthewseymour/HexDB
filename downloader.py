@@ -377,10 +377,10 @@ def collectAndDownloadGameList(topPlayersFile, size, dbFile, outputFinishedFile,
     writeDataToFile(outputInProgress, outputInProgressFile)
 
 print("DOUBLE CHECK THAT DB PARSING IS WORKING, THEN REMOVE THIS MESSAGE")
-#collectAndDownloadGameList("top_players.txt", 11, "game_data11.js", "new_game_data11.js", "timeout_game_data11.js", "in_progress_game_data11.js")
-#collectAndDownloadGameList("top_players.txt", 13, "game_data.js", "new_game_data.js", "timeout_game_data.js", "in_progress_game_data.js")
+collectAndDownloadGameList("top_players.txt", 11, "game_data11.js", "new_game_data11.js", "timeout_game_data11.js", "in_progress_game_data11.js")
+collectAndDownloadGameList("top_players.txt", 13, "game_data.js", "new_game_data.js", "timeout_game_data.js", "in_progress_game_data.js")
 collectAndDownloadGameList("top_players.txt", 15, "game_data15.js", "new_game_data15.js", "timeout_game_data15.js", "in_progress_game_data15.js")
-#collectAndDownloadGameList("top_players.txt", 19, "game_data19.js", "new_game_data19.js", "timeout_game_data19.js", "in_progress_game_data19.js")
+collectAndDownloadGameList("top_players.txt", 19, "game_data19.js", "new_game_data19.js", "timeout_game_data19.js", "in_progress_game_data19.js")
 print("DOUBLE CHECK THAT DB PARSING IS WORKING, THEN REMOVE THIS MESSAGE")
 
     

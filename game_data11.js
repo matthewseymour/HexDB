@@ -120,3 +120,22 @@ games11.push({data: "CBFFGHDEBEIECFCGEFEGHDGE", win_b: false, game: "2232067", w
 games11.push({data: "CBHDHGDHGEFGEGEHHFHEBIGHDGGF", win_b: false, game: "2242236", white: "Daniel Sepczuk", black: "lazyplayer"});
 games11.push({data: "FC.sHDGHHHGIHIHGDHFEGFHCICJAJCGJEG", win_b: true, game: "2242354", white: "So Lost", black: "Daniel Sepczuk"});
 games11.push({data: "CBFFIHIEBHDEHDEHGFGEHEGGFGFHEG", win_b: true, game: "2242355", white: "So Lost", black: "Daniel Sepczuk"});
+
+//Updated Jan 21, 2022
+games11.push({data: "CBHDHGDHBHFEEGDGJDJCCIBG", win_b: false, game: "2252957", white: "lazyplayer", black: "shalev"});
+games11.push({data: "IBGHFHBJIHIIHIIGGFGEEFEJFIFJJGGGFGGDIE", win_b: true, game: "2261462", white: "shalev", black: "So Lost"});
+games11.push({data: "FC.sGEGHHHHGEGEFJFEIDHFF", win_b: false, game: "2269721", white: "lazyplayer", black: "Daniel Sepczuk"});
+games11.push({data: "CBHDDHDEJDJCIDICBEFEEEDGGEFFGDGG", win_b: false, game: "2270798", white: "Daniel Sepczuk", black: "shalev"});
+games11.push({data: "DJHDJDJCDEDHCHDGCGCFBGDFBFDIBJCEBECCCDEBDCDBECFB", win_b: false, game: "2279075", white: "shalev", black: "So Lost"});
+games11.push({data: "KIDHHDHGCIDCGFFHGHGGEHFGDFEGCHEEEFGEIEFDJFJGIGHIHHFJ", win_b: false, game: "2279101", white: "Daniel Sepczuk", black: "Jose Maria Grau Ribas"});
+games11.push({data: "CBGECFCEDEECBGEBHGFD", win_b: false, game: "2273669", white: "Daniel Sepczuk", black: "P_Guz"});
+games11.push({data: "AK.sDHEDDDECCCDBCBDCCDDEBFDGHCFEGEIB", win_b: false, game: "2282339", white: "lazyplayer", black: "Daniel Sepczuk"});
+games11.push({data: "AD.sEGHDFEDHIHHHBIHIJEDGIIHJIJIFKFJDIEGFEHFDDEDICJBHEEGBEB", win_b: true, game: "2282342", white: "Jose Maria Grau Ribas", black: "lazyplayer"});
+games11.push({data: "ACDHHGHDGEHHGHGDFEFDEEEDCEDECFDFCGDIDGEGEFGFIEECJDHBBHCD", win_b: false, game: "2282343", white: "lazyplayer", black: "P_Guz"});
+games11.push({data: "HBDHGGHHIFHFHGFIEHFGFHHDJEDIDEEJ", win_b: false, game: "2282349", white: "Daniel Sepczuk", black: "Jose Maria Grau Ribas"});
+games11.push({data: "CB.sDHHDGDEBECEFIFHC", win_b: false, game: "2282350", white: "P_Guz", black: "Daniel Sepczuk"});
+games11.push({data: "CBHDJDDHBHDECEEFHEHIGHIBGEFDGDGCJBICJCEIIHFJGJGIIIHG", win_b: false, game: "2275611", white: "lazyplayer", black: "Daniel Sepczuk"});
+games11.push({data: "CBHDHGDHCFFEJCJBICHCIBIEJFKDHEIDBIDIDGFG", win_b: false, game: "2284180", white: "lazyplayer", black: "Daniel Sepczuk"});
+games11.push({data: "KD.sIHHDCDHIHHDHEGIIGIDDFEFJJHHCCEDEDG", win_b: true, game: "2260081", white: "Daniel Sepczuk", black: "lazyplayer"});
+games11.push({data: "BB.sHGICEDFJDIEEHDHCGDFCGCHAJBHBGBGAEBDHDEHEJD", win_b: true, game: "2241925", white: "So Lost", black: "shalev"});
+games11.push({data: "FCFFIHIIHIIGJGDEGF", win_b: true, game: "2269005", white: "So Lost", black: "Daniel Sepczuk"});
