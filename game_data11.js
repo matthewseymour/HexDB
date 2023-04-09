@@ -142,3 +142,34 @@ games11.push({data: "FCFFIHIIHIIGJGDEGF", win_b: true, game: "2269005", white: "
 games11.push({data: "AK.sDEDHIDHIEHEGIIIHCHCIHGICHDGBJCHCJBJAFEDCCCDBCBFDHBIBDFGGFGFJGDDJEJGFJFGIFFEIFIFHGHEKDKIEKDKCJDKEJEIGIFGCCDEEEFCADACEDD", win_b: true, game: "2185881", white: "lazyplayer", black: "mootwo"});
 games11.push({data: "AK.sDHEDDDECBCDEHCGFFEGBHFIAJAIBJBICJCIDBFGGJDIECGBGCFDIEHEIFHFIGHGIIHHHIGCHDGHGJEIIHIAAGJFKGKJFIF", win_b: true, game: "2221456", white: "lazyplayer", black: "Chrisek"});
 games11.push({data: "EC.sGEFGIHICJBFDGDIGEFEIDHDGDJEGJEIJHGHHFHGGGHHFIFFJEHDICICJBJBKAKIDKCKBJCKDJD", win_b: true, game: "2192088", white: "lazyplayer", black: "Daniel Sepczuk"});
+
+//Update April 9, 2023
+games11.push({data: "ACDHHGHDGEGDFEFDEEEDCEHHIGIIGHFJBFEIBIEHCJBHJGGI", win_b: false, game: "2294309", white: "shalev", black: "P_Guz"});
+games11.push({data: "IBDHHGHHGHGEHDHFBJFGCHCIBIDF", win_b: false, game: "2327425", white: "Daniel Sepczuk", black: "shalev"});
+games11.push({data: "IBDHHGHIIIHDJCIEJFKDHEHJHHIJFIGIFHFGBIEHEJFECGBHCHDF", win_b: false, game: "2298820", white: "Daniel Sepczuk", black: "shalev"});
+games11.push({data: "ACGEEGCIHDHIDHDIHHFH", win_b: false, game: "2332248", white: "Daniel Sepczuk", black: "Jose Maria Grau Ribas"});
+games11.push({data: "KA.sHDGHEHFFIHHIGIHHEFEGCHDGCGCJDICIDHDJFIFHEIDFCFDDDEEDEEGCIIIF", win_b: false, game: "2332524", white: "Jose Maria Grau Ribas", black: "Tony"});
+games11.push({data: "CBDHHDHIEHGEBIDIHHGIFIFFCGEF", win_b: false, game: "2302649", white: "Daniel Sepczuk", black: "Jose Maria Grau Ribas"});
+games11.push({data: "IBGHHHHDJCIEJFGIKDHIJIJGHGIJDHEDFGGGGE", win_b: true, game: "2302650", white: "P_Guz", black: "Daniel Sepczuk"});
+games11.push({data: "CBDHCFHDFGDECEDDCDDCBGEFDGBHEGDFCGFHEHDJEIEJGIFIGGGHIGHGIFHFJDIEJEJCIDICHEGFGE", win_b: true, game: "2302656", white: "Jose Maria Grau Ribas", black: "P_Guz"});
+games11.push({data: "KD.sHDDCDHCJCHBIGIFJFIJBECGJEJEKDJCKIIHIIHHHIGHGIFHEICJDHFFF", win_b: false, game: "2303830", white: "Daniel Sepczuk", black: "Jose Maria Grau Ribas"});
+games11.push({data: "AI.sCDDHHGIIJBFJEHDIEJFIEIFFEGDEJGGEHE", win_b: true, game: "2304269", white: "Jose Maria Grau Ribas", black: "P_Guz"});
+games11.push({data: "CBDHHGHHIIHDCFCEGEFICIDJBICGGHFGJGHF", win_b: false, game: "2337265", white: "Daniel Sepczuk", black: "Jose Maria Grau Ribas"});
+games11.push({data: "DBGHDHDGGGGECHDDDEEDEEFDCECCGDFEHEHDJCDCKBIDJDIEJEHGIFGI", win_b: false, game: "2273454", white: "P_Guz", black: "Jose Maria Grau Ribas"});
+games11.push({data: "CBDHHGHHIGIHJGGIFHDIEJHDEGFEIDICDGDFBHBJ", win_b: false, game: "2273455", white: "P_Guz", black: "Jose Maria Grau Ribas"});
+games11.push({data: "CBDHHGHHIGIHGHHDCFEIJFEJFJFEJC", win_b: true, game: "2273631", white: "Jose Maria Grau Ribas", black: "P_Guz"});
+games11.push({data: "EC.sHDGHHHGFFFGIHIDJFIGJEJFG", win_b: false, game: "2273635", white: "Jose Maria Grau Ribas", black: "P_Guz"});
+games11.push({data: "AD.sDHHIHDGEEFFDEDEBGDFEDCFCHEGFHFGGHHHGJFIGKGJI", win_b: false, game: "2307670", white: "Daniel Sepczuk", black: "Jose Maria Grau Ribas"});
+games11.push({data: "CB.sHDDJDIGEHEGGEGCJIFHIIIHJIJIHJFJHEJEIFIHHFHFGCIBJEHEDFEGDFDGBGCHBHCJA", win_b: false, game: "2280024", white: "So Lost", black: "P_Guz"});
+games11.push({data: "CBGEHGHHDHEDCFEFHDGC", win_b: false, game: "2314630", white: "Daniel Sepczuk", black: "Jose Maria Grau Ribas"});
+games11.push({data: "AC.sHDGHIHIIHIIGJGEICIICEDEEIEJFHGHFIFHCFDHHDGCFFF", win_b: true, game: "2282356", white: "So Lost", black: "P_Guz"});
+games11.push({data: "CBHDDHEFCFCGDFDGJDHEGEFG", win_b: false, game: "2282365", white: "Jose Maria Grau Ribas", black: "P_Guz"});
+games11.push({data: "IB.sHDHIIIIHGIGEEGFDHEGFGDGJDIFEHF", win_b: true, game: "2315748", white: "Daniel Sepczuk", black: "shalev"});
+games11.push({data: "KB.sHDGHIHIIBJDCEGCJHGGG", win_b: false, game: "2318198", white: "Daniel Sepczuk", black: "Jose Maria Grau Ribas"});
+games11.push({data: "IB.sHDGEEGFIIHIGGGGCHEIBHBHCEDDCFBEHFG", win_b: true, game: "2318201", white: "Stanley Kozera", black: "Daniel Sepczuk"});
+games11.push({data: "KB.sHHFFDEDCBCIIGGDJEHCBGEHDEFDFCDFEEEEGCHDGBGFBCCDBBBDDCEFHEI", win_b: true, game: "2318208", white: "Jose Maria Grau Ribas", black: "Stanley Kozera"});
+games11.push({data: "KD.sIHEDHDIIHIGFFEGDGEEGDFIGJGGHIEGCBG", win_b: true, game: "2318237", white: "JKB", black: "lazyplayer"});
+games11.push({data: "AK.sCDEGIHHIHHIICIDCDDCCBDBCJHJIECGBGCHBDGFAIBHCICHEHDFEJDIFHFFG", win_b: false, game: "2323893", white: "Daniel Sepczuk", black: "Tony"});
+games11.push({data: "KC.sDEHDBJDCCDCIGEGHDICCBDCJIHGGFHEJFIBCFDFGCHEEEDCGDG", win_b: true, game: "2291189", white: "Jose Maria Grau Ribas", black: "P_Guz"});
+games11.push({data: "ACDHHGHDGEFGHFHEGFHIIIHJIJIHJFJHBIBJCIEJ", win_b: false, game: "2291294", white: "lazyplayer", black: "Daniel Sepczuk"});
+games11.push({data: "CB.sDHHIHDCJCHFEGF", win_b: true, game: "2324161", white: "Tony", black: "Jose Maria Grau Ribas"});
